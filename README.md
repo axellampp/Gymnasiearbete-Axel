@@ -1,7 +1,9 @@
 # Gymnasiearbete 24/25
-_Axel Lampa_
+
+ Axel Lampa
 
 ## Länkträd
+
 - [Dokumentation]
 - [Backlog]
 - [Repository]
@@ -10,11 +12,10 @@ _Axel Lampa_
 [Backlog]: https://trello.com/b/famHCpAY/backlog-planering
 [Repository]: https://github.com/axellampp/Gymnasiearbete---Axel
 [Fångarnas dilemma]: https://en.wikipedia.org/wiki/Prisoner%27s_dilemma
-[Axelrod's Tournament]: https://axelrod.readthedocs.io/en/fix-documentation/reference/overview_of_strategies.html
 [The Evolution of Cooperation]: https://ee.stanford.edu/~hellman/Breakthrough/book/pdfs/axelrod.pdf
 
-
 ## Projektbeskrivning
+
 Detta examenarbete undersöker _[Fångarnas dilemma]_, det vanligaste problemet man stöter på inom spelteori som används ofta för att analysera och få rationella lösningar i konflikter. Problemet går ut på att två individer måste fatta beslut utan att känna till den andres val. Beroende på deras val kan de antingen samarbeta eller agera själviskt, vilket kommer påverka deras resultat. Genom att replikera och simulera Fångarnas dilemma i Visual Studio Code med Python, syftar examenarbetet till att ge en djupare förståelse för de strategier och tankesätt som används för att få det bästa resultatet.
 
-Ett särskilt fokus ligger på att replikera och analysera Robert Axelrods iteration av _[Fångarnas dilemma]_, även känd som Axelrod’s Tournament, som publicerades i hans verk _[The Evolution of Cooperation]_. Axelrods forskning visar hur samarbete kan uppstå bland konflikter, och detta examenarbete syftar till att replikera, undersöka och validera hans slutsatser genom flera simuleringar.
+Ett särskilt fokus ligger på att replikera och analysera Robert Axelrods iteration av _[Fångarnas dilemma]_, även känd som _Axelrod’s Tournament_, som publicerades i hans verk _[The Evolution of Cooperation]_. Axelrods forskning visar hur samarbete kan uppstå bland konflikter, och detta examenarbete syftar till att replikera, undersöka och validera hans slutsatser genom flera simuleringar.
