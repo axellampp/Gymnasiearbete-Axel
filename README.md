@@ -15,14 +15,12 @@ Den vanligaste versionen av dilemmat kan visualiseras som följande:
 | **Fånge A är tyst** | Båda får 1 år |A får 3 år, B friges |
 | **Fånge A vittnar** | A friges, B får 3 år | Båda får 2 år |
 
-## Länkträd
+## Länkar
 
-- [Dokumentation]
-- [Backlog]
+- [Loggbok/Backlog]
 - [Repository]
 
-[Dokumentation]: https://docs.google.com/document/d/1yisuDjvD-EE_7QIu7x1w64V1gVMFPEqq9ytYGSEC3EA/edit
-[Backlog]: https://trello.com/b/famHCpAY/backlog-planering
+[Loggbok/Backlog]: https://docs.google.com/document/d/1yisuDjvD-EE_7QIu7x1w64V1gVMFPEqq9ytYGSEC3EA/edit
 [Repository]: https://github.com/axellampp/Gymnasiearbete---Axel
 [Fångarnas dilemma]: https://en.wikipedia.org/wiki/Prisoner%27s_dilemma
 [The Evolution of Cooperation]: https://ee.stanford.edu/~hellman/Breakthrough/book/pdfs/axelrod.pdf
