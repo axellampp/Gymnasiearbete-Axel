@@ -10,3 +10,11 @@ payoff_matrix = {
 # Funktion för en runda
 def simulate_round(A_Choice, B_Choice):
     return payoff_matrix[(A_Choice, B_Choice)]
+    
+# Exempel på en så kallad, strategi.
+def always_cooperate():
+    return "Cooperate"
+
+def random_strategy():
+    return random.choice[("Cooperate", "Defect")]
+
