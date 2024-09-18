@@ -46,12 +46,12 @@ Då får vi denna ojämlikhet: $T$ > $R$ > $P$ > $S$
 
 ### Probabilistisk strategi
 
-Anta att båda deltagare (fångar i detta sammanhang) i dilemmat får slumpmässigt välja sin strategi. 
+Anta att båda fångar får slumpmässigt välja sin strategi. 
 
 - Låt $x$ vara sannolikheten att fånge A är tyst. Då kan $(1-x)$ vara sannolikheten att fånge A agerar för sitt eget bästa, alltså vittnar.
 - Låt $y$ vara sannolikheten att fånge B är tyst. Då kan $(1-y)$ vara sannolikheten att fånge B agerar för sitt eget bästa, alltså vittnar.
 
-### Utfall som formel
+### Utfall
 
 Alla möjliga utfall för A kan beräknas utifrån payoff matrisen. Det går som följande:
 
@@ -60,7 +60,7 @@ Alla möjliga utfall för A kan beräknas utifrån payoff matrisen. Det går som
 - Fånge A vittnar, fånge B är tyst. Detta kan ske med sannolikheten $(1-x)y$. Fånge A får $T$ som resultat.
 - Båda vittnar. Detta kan ske med sannolikheten $(1-x)(1-y)$. Fånge A får $P$ som resultat.
 
-Utfallet för A blir då summan av allt vilket blir:
+Förväntade utfall för A blir då summan av allt vilket blir:
 
 $Utfall_A(x, y) = Rxy + Sx(1-y) + Ty(1-x) + P(1-x)(1-y)$
 
@@ -75,7 +75,23 @@ $Utfall_A(x, y) = 3xy + 5y-5xy + 1-y-x+xy$
 
 Vilket till sist blir:
 
-$Utfall_A(x, y) = (-xy+4y+1-x))$
+$Utfall_A(x, y) = -xy+4y+1-x$
+
+Samma teori gäller för fånge B:
+
+$Utfall_B(x, y) = Rxy + Tx(1-y) + Sy(1-x) + P(1-x)(1-y)$
+
+Däremot så blir den andra och tredje termens koefficient för resultat omvända eftersom när fånge A vittnar och fånge B håller tyst så får fånge B $S$ och inte $T$. Förenklingar leder till följande:
+
+$Utfall_B(x, y) = Rxy + Tx(1-y) + Sy(1-x) + P(1-x)(1-y)$ \
+$Utfall_B(x, y) = 3xy + 5x(1-y) + 0y(1-x) + 1(1-x)(1-y)$ \
+$Utfall_B(x, y)=3xy+5x−5xy+1−y−x+xy$ \
+$Utfall_B(x, y)=−xy+4x+1−y$
+
+Nu kan vi kombinera $Utfall_A(x, y)$ och $Utfall_B(x, y)$ för att få ett enat perspektiv:
+
+$Utfall(x, y) = (-xy+4y+1-x) + (xy+4x+1−y)$ \
+$Utfall(x, y) = -2xy + 3x + 3y + 2$
 
 ## Programmering
 
