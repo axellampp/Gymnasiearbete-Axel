@@ -19,7 +19,7 @@ Den vanligaste versionen av dilemmat kan visualiseras som följande:
 
 ## Teori
 
-### Payoff matris
+### Probabilistisk strategi
 
 Låt straffet man får vara poäng istället. Detta förenklar att förstå samband och sannolikhet. För en djupare bild brukar man rita upp dilemmat som följande:
 
@@ -44,14 +44,10 @@ och låt
 
 Då får vi denna ojämlikhet: $T$ > $R$ > $P$ > $S$
 
-### Probabilistisk strategi
-
 Anta att båda fångar får slumpmässigt välja sin strategi. 
 
 - Låt $x$ vara sannolikheten att fånge A är tyst. Då kan $(1-x)$ vara sannolikheten att fånge A agerar för sitt eget bästa, alltså vittnar.
 - Låt $y$ vara sannolikheten att fånge B är tyst. Då kan $(1-y)$ vara sannolikheten att fånge B agerar för sitt eget bästa, alltså vittnar.
-
-### Utfall
 
 Alla möjliga utfall för A kan beräknas utifrån payoff matrisen. Det går som följande:
 
