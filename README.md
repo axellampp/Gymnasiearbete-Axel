@@ -75,18 +75,18 @@ $Utfall_A(x, y) = 3xy + 5y-5xy + 1-y-x+xy$
 
 Vilket till sist blir:
 
-$Utfall_A(x, y) = -xy+4y+1-x$
+$Utfall_A(x, y) = -xy + 4y + 1 - x$
 
 Samma teori gäller för fånge B:
 
 $Utfall_B(x, y) = Rxy + Tx(1-y) + Sy(1-x) + P(1-x)(1-y)$
 
-Däremot så blir den andra och tredje termens koefficient för resultat omvända eftersom när fånge A vittnar och fånge B håller tyst så får fånge B $S$ och inte $T$. Förenklingar leder till följande:
+Däremot så blir den andra och tredje termens koefficient för resultat omvänt eftersom när fånge A vittnar och fånge B håller tyst så får fånge B $S$ och inte $T$. Förenklingar leder till följande:
 
 $Utfall_B(x, y) = Rxy + Tx(1-y) + Sy(1-x) + P(1-x)(1-y)$ \
 $Utfall_B(x, y) = 3xy + 5x(1-y) + 0y(1-x) + 1(1-x)(1-y)$ \
-$Utfall_B(x, y)=3xy+5x−5xy+1−y−x+xy$ \
-$Utfall_B(x, y)=−xy+4x+1−y$
+$Utfall_B(x, y) = 3xy + 5x −5xy + 1 − y −x + xy$ \
+$Utfall_B(x, y) = -xy + 4x + 1 - y$
 
 Nu kan vi kombinera $Utfall_A(x, y)$ och $Utfall_B(x, y)$ för att få ett enat perspektiv:
 
@@ -131,7 +131,7 @@ plt.ylabel('Probability of Player B Cooperating (y)')
 plt.show()
 
 ```
-Kod för isaritm sammanlagda utfall:
+Kod för isaritm av sammanlagda utfall:
 
 ``` python
 
