@@ -15,6 +15,8 @@ def simulate_round(A_Choice, B_Choice):
 def always_cooperate():
     return "Cooperate"
 
+def always_defect():
+    return "Cooperate"
+
 def random_strategy():
     return random.choice[("Cooperate", "Defect")]
-
