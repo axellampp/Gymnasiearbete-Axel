@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 x = np.linspace(0, 1, 500)  # More points for better detail
 y = np.linspace(0, 1, 500)  # More points for better detail
 
-# meshgrid for the plot
+# meshgrid for the plot-m pip in
 X, Y = np.meshgrid(x, y)
 
 def payoff_function(X, Y):

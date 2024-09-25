@@ -44,7 +44,7 @@ och låt
 
 Då får vi denna ojämlikhet: $T$ > $R$ > $P$ > $S$
 
-Anta att båda fångar får slumpmässigt välja sin strategi. 
+Anta att båda fångar får slumpmässigt välja sin strategi.
 
 - Låt $x$ vara sannolikheten att fånge A är tyst. Då kan $(1-x)$ vara sannolikheten att fånge A agerar för sitt eget bästa, alltså vittnar.
 - Låt $y$ vara sannolikheten att fånge B är tyst. Då kan $(1-y)$ vara sannolikheten att fånge B agerar för sitt eget bästa, alltså vittnar.
@@ -90,9 +90,20 @@ $Utfall(x, y) = (-xy+4y+1-x) + (xy+4x+1−y)$ \
 $Utfall(x, y) = -2xy + 3x + 3y + 2$
 
 ## Programmering
+
+Se till att NumPy och Matplotlib Pyplot är installerade. Detta kan göras som följande i en terminal:
+
+``` bat
+
+python -m pip install numpy
+pip install matplotlib
+
+```
+
 Kod för isaritm av individuella utfall.
 
 ``` python
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -127,6 +138,7 @@ plt.ylabel('Probability of Player B Cooperating (y)')
 plt.show()
 
 ```
+
 Kod för isaritm av sammanlagda utfall:
 
 ``` python
@@ -165,8 +177,6 @@ plt.ylabel('Probability of Player B Defecting (y)')
 plt.show()
 
 ```
-
-
 
 ## Länkar
 

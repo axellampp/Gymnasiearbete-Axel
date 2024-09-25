@@ -25,8 +25,8 @@ colorbar.set_ticks(np.arange(int(Z.min()), int(Z.max()) + 1))
 
 # Labels and title
 plt.title('Payoff Contour Plot for Prisoner\'s Dilemma')
-plt.xlabel('Probability of Player A Defecting (x)')
-plt.ylabel('Probability of Player B Defecting (y)')
+plt.xlabel('Probability of Player A Cooperating (x)')
+plt.ylabel('Probability of Player B Cooperating (y)')
 
 
 plt.show()
