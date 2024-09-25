@@ -23,6 +23,13 @@ def always_defect():
 def random_strategy():
     return random.choice(["Cooperate", "Defect"])
 
+def titfortat(lastOpponentMove=None):
+
+    if lastOpponentMove is None:
+        return "Cooperate"
+
+    return lastOpponentMove
+
 def simulate_tournament(num_rounds):
     A_score = 0
     B_score = 0
