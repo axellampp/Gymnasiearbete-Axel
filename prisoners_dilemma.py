@@ -1,6 +1,6 @@
 import random
 
-### Poängsystem istället för år i fängelse då det är mest logiskt att vilja ha så mycket poäng som möjligt än fängelseår
+### Poängsystem istället för belöning i fängelsetid då det är mest logiskt att vilja ha så mycket poäng som möjligt än fängelseår. Därmed är tabellen omvänd så logiken är lika.
 
 payoff_matrix = {
     ("Cooperate", "Cooperate"): (3, 3),
@@ -13,16 +13,17 @@ payoff_matrix = {
 def simulate_round(A_choice, B_choice):
     return payoff_matrix[(A_choice, B_choice)]
     
-# Exempel på en så kallad, strategi.
-def always_cooperate():
+# Strategier
+def always_cooperate(_):
     return "Cooperate"
 
-def always_defect():
+def always_defect(_):
     return "Defect"
 
-def random_strategy():
+def random_strategy(_):
     return random.choice(["Cooperate", "Defect"])
 
+# Börja med Cooperate, sedan kopiera motståndarens val.
 def titfortat(lastOpponentMove=None):
 
     if lastOpponentMove is None:
@@ -30,21 +31,46 @@ def titfortat(lastOpponentMove=None):
 
     return lastOpponentMove
 
-def simulate_tournament(num_rounds):
+# Cooperate tills motståndaren har valt defekt, sen defekta alltid
+def grim_strategy(lastOpponentMove=None):
+    if grim_strategy.hasDefected:
+        return "Defect"
+
+    if lastOpponentMove == "Defect":
+        grim_strategy.hasDefected = True
+        return "Defect"
+    
+    return "Cooperate"    
+
+grim_strategy.hasDefected = False
+
+
+def simulate_tournament(num_rounds, A_strategy, B_strategy):
     A_score = 0
     B_score = 0
 
+    last_move_A = None
+    last_move_B = None
+
     for _ in range(num_rounds):
-        A_choice = always_defect()
-        B_choice = random_strategy()
+        A_choice = A_strategy(last_move_B)
+        B_choice = B_strategy(last_move_A)
 
         outcome = simulate_round(A_choice, B_choice)
 
         A_score += outcome[0]
         B_score += outcome[1]
+
+        last_move_A = A_choice
+        last_move_B = B_choice
+        
+        # Debug
+        # print(f"Player A chose to {A_choice}")
+        # print(f"Player B chose to {B_choice}")
+
     
-    print("Player A\'s score: ", A_score)
-    print("Player B\'s score: ", B_score)
+    print(f"Player A\'s score: ", A_score)
+    print(f"Player B\'s score: ", B_score)
 
 
-simulate_tournament(100)
+simulate_tournament(100, grim_strategy, titfortat)
