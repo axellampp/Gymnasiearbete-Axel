@@ -14,10 +14,10 @@ def simulate_round(A_choice, B_choice):
     return payoff_matrix[(A_choice, B_choice)]
     
 # Strategier
-def always_cooperate(_):
+def cooperator(_):
     return "Cooperate"
 
-def always_defect(_):
+def defector(_):
     return "Defect"
 
 def random_strategy(_):
@@ -32,17 +32,23 @@ def titfortat(lastOpponentMove=None):
     return lastOpponentMove
 
 # Cooperate tills motståndaren har valt defekt, sen defekta alltid
-def grim_strategy(lastOpponentMove=None):
-    if grim_strategy.hasDefected:
+def grudger(lastOpponentMove=None):
+    if grudger.hasDefected:
         return "Defect"
 
     if lastOpponentMove == "Defect":
-        grim_strategy.hasDefected = True
+        grudger.hasDefected = True
         return "Defect"
     
     return "Cooperate"    
 
-grim_strategy.hasDefected = False
+grudger.hasDefected = False
+
+def WinStayLoseShift():
+
+
+
+    pass
 
 
 def simulate_tournament(num_rounds, A_strategy, B_strategy):
@@ -64,13 +70,13 @@ def simulate_tournament(num_rounds, A_strategy, B_strategy):
         last_move_A = A_choice
         last_move_B = B_choice
         
-        # Debug
+        # Debug för att see val
         # print(f"Player A chose to {A_choice}")
         # print(f"Player B chose to {B_choice}")
 
     
-    print(f"Player A\'s score: ", A_score)
-    print(f"Player B\'s score: ", B_score)
+    print(f"Player A\'s score: {A_score}")
+    print(f"Player B\'s score: {B_score}")
 
-
-simulate_tournament(100, grim_strategy, titfortat)
+# Funktion för simulationen. Kräver antal rundor, As strategi och Bs strategi
+simulate_tournament(300, grudger, defector)
