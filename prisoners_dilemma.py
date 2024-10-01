@@ -13,18 +13,22 @@ payoff_matrix = {
 def simulate_round(A_choice, B_choice):
     return payoff_matrix[(A_choice, B_choice)]
     
-# Strategier
-def cooperator(_):
+### Strategier
+
+# alltid Cooperate
+def strat_cooperator(_):
     return "Cooperate"
 
-def defector(_):
+# alltid Defect
+def strat_defector(_):
     return "Defect"
 
-def random_strategy(_):
+# Slumpa
+def strat_random(_):
     return random.choice(["Cooperate", "Defect"])
 
 # Börja med Cooperate, sedan kopiera motståndarens val.
-def titfortat(lastOpponentMove=None):
+def strat_titfortat(lastOpponentMove=None):
 
     if lastOpponentMove is None:
         return "Cooperate"
@@ -32,17 +36,17 @@ def titfortat(lastOpponentMove=None):
     return lastOpponentMove
 
 # Cooperate tills motståndaren har valt defekt, sen defekta alltid
-def grudger(lastOpponentMove=None):
-    if grudger.hasDefected:
+def strat_grudger(lastOpponentMove=None):
+    if strat_grudger.hasDefected:
         return "Defect"
 
     if lastOpponentMove == "Defect":
-        grudger.hasDefected = True
+        strat_grudger.hasDefected = True
         return "Defect"
     
     return "Cooperate"    
 
-grudger.hasDefected = False
+strat_grudger.hasDefected = False
 
 def WinStayLoseShift():
 
@@ -79,4 +83,4 @@ def simulate_tournament(num_rounds, A_strategy, B_strategy):
     print(f"Player B\'s score: {B_score}")
 
 # Funktion för simulationen. Kräver antal rundor, As strategi och Bs strategi
-simulate_tournament(300, grudger, defector)
+simulate_tournament(300, strat_grudger, strat_random)
