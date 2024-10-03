@@ -5,12 +5,11 @@ import matplotlib.pyplot as plt
 x = np.linspace(0, 1, 500)  # More points for better detail
 y = np.linspace(0, 1, 500)  # More points for better detail
 
-# meshgrid for the plot-m pip in
+# meshgrid for the plot
 X, Y = np.meshgrid(x, y)
 
 def payoff_function(X, Y):
     return -X * Y + 4 * Y + 1 - X
-
 
 Z = payoff_function(X, Y)
 
@@ -27,6 +26,5 @@ colorbar.set_ticks(np.arange(int(Z.min()), int(Z.max()) + 1))
 plt.title('Payoff Contour Plot for Prisoner A')
 plt.xlabel('Probability of Player A Cooperating (x)')
 plt.ylabel('Probability of Player B Cooperating (y)')
-
 
 plt.show()

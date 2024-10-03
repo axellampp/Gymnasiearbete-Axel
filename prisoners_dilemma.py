@@ -1,7 +1,6 @@
 import random
 
-### Poängsystem istället för belöning i fängelsetid då det är mest logiskt att vilja ha så mycket poäng som möjligt än fängelseår. Därmed är tabellen omvänd så logiken är lika.
-
+### Points system instead of years in prison as it is most logical to want as many points as possible than prison years. Thus the table is reversed.
 payoff_matrix = {
     ("Cooperate", "Cooperate"): (3, 3),
     ("Cooperate", "Defect"): (0, 5),
@@ -9,34 +8,42 @@ payoff_matrix = {
     ("Defect", "Defect"): (1, 1),
 }
 
-# Funktion för en runda
+# Function for simulating one round.
 def simulate_round(A_choice, B_choice):
     return payoff_matrix[(A_choice, B_choice)]
     
-### Strategier
+### Strategies
 
-# alltid Cooperate
-def strat_cooperator(_):
+# Always Cooperate
+def strat_cooperator(lastOwnMove=None, lastOutcome=None):
     return "Cooperate"
 
-# alltid Defect
-def strat_defector(_):
+# Always Defect
+def strat_defector(lastOwnMove=None, lastOutcome=None):
     return "Defect"
 
-# Slumpa
-def strat_random(_):
+# Randomize the outcome
+def strat_random(lastOwnMove=None, lastOutcome=None):
     return random.choice(["Cooperate", "Defect"])
 
-# Börja med Cooperate, sedan kopiera motståndarens val.
-def strat_titfortat(lastOpponentMove=None):
-
+# Start with cooperating, then copy the opponents last choice.
+def strat_titfortat(lastOpponentMove=None, lastOutcome=None):
     if lastOpponentMove is None:
         return "Cooperate"
 
     return lastOpponentMove
 
-# Cooperate tills motståndaren har valt defekt, sen defekta alltid
-def strat_grudger(lastOpponentMove=None):
+def strat_titfortwotats(lastOpponentMove=None, lastOutcome=None):
+    if lastOpponentMove is None or len(lastOpponentMove) < 2:
+        return "Cooperate"
+
+    if lastOpponentMove[-2] == "Defect":
+        return "Defect"
+
+    return "Cooperate"
+
+# Cooperate until the opponent has defected, then defect forever.
+def strat_grudger(lastOpponentMove=None, lastOutcome=None):
     if strat_grudger.hasDefected:
         return "Defect"
 
@@ -48,39 +55,55 @@ def strat_grudger(lastOpponentMove=None):
 
 strat_grudger.hasDefected = False
 
-def WinStayLoseShift():
+# Cooperate if the last round was mutually beneficial. Otherwise, switch strategy.
+def strat_WinStayLoseShift(lastOwnMove=None, lastOutcome=None):
+    
+    if lastOwnMove is None: # First round
+        return "Cooperate"
 
+    if lastOutcome in [(3, 3), (1, 1)]: # Mutual outcome
+        return lastOwnMove # Stick with the previous move
 
-
-    pass
+    if lastOutcome in [(0, 5), (5, 0)]:
+        print("asdasd")
+        return "Defect" if lastOwnMove == "Defect" else "Cooperate"
 
 
 def simulate_tournament(num_rounds, A_strategy, B_strategy):
     A_score = 0
     B_score = 0
 
-    last_move_A = None
-    last_move_B = None
+    A_last_move = None
+    B_last_move = None
+    A_last_outcome = None
+    B_last_outcome = None
 
     for _ in range(num_rounds):
-        A_choice = A_strategy(last_move_B)
-        B_choice = B_strategy(last_move_A)
+        A_choice = A_strategy(B_last_move, B_last_outcome)
+        B_choice = B_strategy(A_last_move, A_last_outcome)
+
+        print(f"A choice: {A_choice}")
+        print(f"B choice: {B_choice}")
 
         outcome = simulate_round(A_choice, B_choice)
 
         A_score += outcome[0]
         B_score += outcome[1]
 
-        last_move_A = A_choice
-        last_move_B = B_choice
-        
-        # Debug för att see val
-        # print(f"Player A chose to {A_choice}")
-        # print(f"Player B chose to {B_choice}")
+        # Update
+        A_last_move = A_choice
+        B_last_move = B_choice
+        A_last_outcome = outcome
+        B_last_outcome = (outcome[1], outcome[0])
+        print(f" A outcome: {outcome}")
+        print(f"B outcome: {(outcome[1], outcome[0])}")
 
-    
+        # Debug för att see val
+        #print(f"Player A chose to {A_choice}")
+        #print(f"Player B chose to {B_choice}")
+
     print(f"Player A\'s score: {A_score}")
     print(f"Player B\'s score: {B_score}")
 
 # Funktion för simulationen. Kräver antal rundor, As strategi och Bs strategi
-simulate_tournament(300, strat_grudger, strat_random)
+simulate_tournament(10, strat_titfortwotats, strat_defector)

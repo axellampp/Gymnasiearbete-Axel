@@ -11,7 +11,6 @@ X, Y = np.meshgrid(x, y)
 def payoff_function(X, Y):
     return -2 * X * Y + 5 * X + 5 * Y + 2
 
-
 Z = payoff_function(X, Y)
 
 plt.figure(figsize=(8, 6))
@@ -27,6 +26,5 @@ colorbar.set_ticks(np.arange(int(Z.min()), int(Z.max()) + 1))
 plt.title('Payoff Contour Plot for Prisoner\'s Dilemma')
 plt.xlabel('Probability of Player A Cooperating (x)')
 plt.ylabel('Probability of Player B Cooperating (y)')
-
 
 plt.show()
