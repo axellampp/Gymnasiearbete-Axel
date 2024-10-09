@@ -36,7 +36,7 @@ def strat_titfortat(lastOpponentMove=None, lastOutcome=None):
 def strat_titfortwotats(lastOpponentMove=None, lastOutcome=None):
     if lastOpponentMove is None or len(lastOpponentMove) < 2:
         return "Cooperate"
-
+    print(lastOpponentMove[-2])
     if lastOpponentMove[-2] == "Defect":
         return "Defect"
 
@@ -68,6 +68,18 @@ def strat_WinStayLoseShift(lastOwnMove=None, lastOutcome=None):
         print("asdasd")
         return "Defect" if lastOwnMove == "Defect" else "Cooperate"
 
+# Let the user be a player and choose to defect or cooperate.       
+def strat_human(lastOwnMove=None, lastOutcome=None):
+    choice = input("Defect or Cooperate: ")
+
+    if choice.lower() == "defect":
+        return "Defect"
+
+    if choice.lower() == "cooperate":
+        return "Cooperate"
+    
+    else:
+        print(f"'{choice}' is invalid, try again:")
 
 def simulate_tournament(num_rounds, A_strategy, B_strategy):
     A_score = 0
@@ -95,8 +107,8 @@ def simulate_tournament(num_rounds, A_strategy, B_strategy):
         B_last_move = B_choice
         A_last_outcome = outcome
         B_last_outcome = (outcome[1], outcome[0])
-        print(f" A outcome: {outcome}")
-        print(f"B outcome: {(outcome[1], outcome[0])}")
+        #print(f" A outcome: {outcome}")
+        #print(f"B outcome: {(outcome[1], outcome[0])}")
 
         # Debug för att see val
         #print(f"Player A chose to {A_choice}")
@@ -106,4 +118,4 @@ def simulate_tournament(num_rounds, A_strategy, B_strategy):
     print(f"Player B\'s score: {B_score}")
 
 # Funktion för simulationen. Kräver antal rundor, As strategi och Bs strategi
-simulate_tournament(10, strat_titfortwotats, strat_defector)
+simulate_tournament(5, strat_human, strat_defector)
