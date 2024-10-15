@@ -1,3 +1,4 @@
+from multiprocessing.sharedctypes import Value
 import random
 import matplotlib.pyplot as plt
 from scipy.stats import chisquare
@@ -32,7 +33,7 @@ def strat_titfortat(opponentMoveHistory=None, selfMoveHistory=None):
     if opponentMoveHistory is None or len(opponentMoveHistory) < 1:
         return "Cooperate"
     
-    # Check the last two moves of the opponent
+    # Check the last move from the opponent
     if opponentMoveHistory[-1] == "Defect":
         return "Defect"
 
@@ -284,17 +285,20 @@ strat_graaskamp.random_opponent_detected = False
 strat_graaskamp.tit_for_tat_detected = False
 strat_graaskamp.defect_counter = 0
 
+# Play tit for tat but calculate the opponent's cooperation probability, which decreases over time.
 def strat_feld(opponentMoveHistory=None, selfMoveHistory=None):
     round_num = len(opponentMoveHistory)
 
-    if opponentMoveHistory is None or round_num == 0:
-        return "Cooperate"  # First move, always cooperate
 
-    # Always defect after a defection
+    # Tit for tat implementation    
+    if opponentMoveHistory is None or len(opponentMoveHistory) < 1:
+        return "Cooperate"
+    
+    # Check the last move from the opponent
     if opponentMoveHistory[-1] == "Defect":
         return "Defect"
 
-    # Calculate cooperation probability, which decreases over time
+    # Calculation of cooperation probability
     prob_cooperate = max(1 - (round_num / 400), 0.5)
 
     # Randomly choose to cooperate based on the calculated probability
@@ -303,18 +307,20 @@ def strat_feld(opponentMoveHistory=None, selfMoveHistory=None):
     else:
         return "Defect"
 
+# Cooperate for 11 rounds, then calculate the opponent's cooperation rate over the last 10 rounds. 
+# Then, calculate the cooperation rate as 10% less than the opponent's cooperation rate
 def strat_tullock(opponentMoveHistory=None, selfMoveHistory=None):
     round_num = len(opponentMoveHistory)
 
     if round_num <= 11:
         return "Cooperate"  # Cooperate for the first 11 rounds
 
-    # For subsequent rounds, calculate the opponent's cooperation rate over the last 10 rounds
+    # Calculation of the opponent's cooperation rate
     if round_num > 11:
         last_10_moves = opponentMoveHistory[-10:]
         coop_count = last_10_moves.count("Cooperate")
 
-        # Calculate the cooperation rate as 10% less than the opponent's cooperation rate
+        # Final calculation of cooperation rate
         prob_cooperate = max(0, (coop_count / 10) - 0.1)
 
         # Randomly choose to cooperate based on the calculated probability
@@ -328,9 +334,12 @@ def strat_human(opponentMoveHistory=None, selfMoveHistory=None):
     while True:
         choice = input("Defect or Cooperate: ").lower()
 
-        if choice == "defect":
+        if choice.find("d") != -1:
+            print("You chose to Defect")
             return "Defect"
-        elif choice == "cooperate":
+
+        elif choice.find("c") != -1:
+            print("You chose to Cooperate")
             return "Cooperate"
         else:
             print(f"'{choice}' is invalid, try again.")
@@ -368,7 +377,7 @@ strategy_names = [
     "Davis"
 ]
 
-# Simulate all vs all
+# simulate_match() simulates a match between 2 strategies
 def simulate_match(A_strategy, B_strategy, num_rounds):
     reset_friedman()
 
@@ -402,8 +411,10 @@ def simulate_match(A_strategy, B_strategy, num_rounds):
     score = [A_score, B_score]
     #print(f"Player A\'s score: {A_score}")
     #print(f"Player B\'s score: {B_score}")
+
     return score
 
+# simulate_tournament() simulates the whole tournament for n rounds
 def simulate_tournament(num_rounds):
 
     results = {name: 0 for name in strategy_names}
@@ -436,8 +447,13 @@ if __name__ == "__main__":
     num_rounds = 200  # Number of rounds for each match
     tournament_results = simulate_tournament(num_rounds)
     print(tournament_results)
-    print(max(tournament_results))
+
+    winner = max(tournament_results, key=lambda name: tournament_results[name])
+    winner_score = tournament_results[winner]
+
+    print(f"The winner is '{winner}' who won with a score of {winner_score} points.")
+
     plot_results(tournament_results)
 
 # Debug
-#simulate_match(strat_tideman_chieruzzi, strat_tullock, 30) 
+#simulate_match(strat_human, strat_feld, 5) 
