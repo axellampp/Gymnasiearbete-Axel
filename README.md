@@ -154,7 +154,7 @@ y = np.linspace(0, 1, 500)  # More points for better detail
 X, Y = np.meshgrid(x, y)
 
 def payoff_function(X, Y):
-    return -2 * X * Y + 5 * X + 5 * Y + 2
+    return -2 * X * Y + 3 * X + 3 * Y + 2
 
 
 Z = payoff_function(X, Y)
