@@ -2,25 +2,11 @@
 
  Axel Lampa
 
-
 ## För återskapandet
 
 Detta examensarbete undersöker _[fångarnas dilemma]_, det vanligaste problemet man stöter på inom spelteori som ofta används för att analysera och få rationella lösningar i konflikter. Problemet går ut på att två individer måste fatta beslut utan att känna till den andres val. Beroende på deras val kan de antingen samarbeta eller agera själviskt, vilket kommer påverka deras resultat. Genom att replikera och simulera Fångarnas dilemma i Visual Studio Code med Python, syftar examensarbetet till att ge en djupare förståelse för de strategier och tankesätt som används för att få det bästa resultatet.
 
 Ett särskilt fokus ligger på att replikera och analysera Robert Axelrods iteration av _[fångarnas dilemma]_, även känd som _Axelrod’s Tournament_, som publicerades i hans verk _[The Evolution of Cooperation]_. Axelrods forskning visar hur samarbete kan uppstå bland konflikter, och detta examensarbete syftar till att replikera, undersöka och validera hans slutsatser genom flera simuleringar.
-
-Den vanligaste versionen av dilemmat kan visualiseras som följande:
-
-|  | **Fånge B är tyst** | **Fånge B vittnar** |
-| ------------- | ------------- |---------------|
-| **Fånge A är tyst** | Båda får 1 år | A får 5 år, B friges |
-| **Fånge A vittnar** | A friges, B får 5 år | Båda får 3 år |
-
-## Bakomliggande
-
-### Probabilistisk strategi
-
-Låt straffet man får vara poäng istället. Detta förenklar att förstå samband och sannolikhet. För en djupare bild brukar man rita upp dilemmat som följande:
 
 |  | **Fånge B är tyst** | **Fånge B vittnar** |
 | ------------- | ------------- |---------------|
@@ -178,7 +164,7 @@ plt.show()
 
 ```
 
-Kod för programmet
+Kod för itererade versionen av dilemmat. 13 strategier
 
 ``` python
 from multiprocessing.sharedctypes import Value
