@@ -453,7 +453,7 @@ if __name__ == "__main__":
 
     print(f"The winner is '{winner}' who won with a score of {winner_score} points.")
 
-    #plot_results(tournament_results)
+    plot_results(tournament_results)
 
 # Debug
 #simulate_match(strat_human, strat_feld, 5) 

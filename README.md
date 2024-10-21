@@ -86,6 +86,14 @@ pip install scipy
 
 ```
 
+För att återskapa spelet se till att PyGame är installerat. Kan göras vid en terminal som följande:
+
+```bat
+
+pip3 install pygame
+
+```
+
 Kod för isaritm av individuella utfall.
 
 ``` python
