@@ -421,10 +421,10 @@ def simulate_tournament(num_rounds):
     for n in range(4):
         for i, strategy_A in enumerate(strategies):
             for j, strategy_B in enumerate(strategies):
-                #print(f"Simulating match between {strategy_names[i]} and {strategy_names[j]}")
+                #print(f"Simulating match between {strategy_names[i]} and {strategy_names[j]}") # debug
                 A_score, B_score = simulate_match(strategy_A, strategy_B, num_rounds)
 
-                #print(f"Result: {strategy_names[i]} scored {A_score}, {strategy_names[j]} scored {B_score}")
+                #print(f"Result: {strategy_names[i]} scored {A_score}, {strategy_names[j]} scored {B_score}") # debug
                 results[strategy_names[i]] += A_score
                 results[strategy_names[j]] += B_score
 
