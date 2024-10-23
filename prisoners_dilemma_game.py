@@ -5,8 +5,8 @@ import random
 # Color and window configurations
 GREEN = (25, 105, 25)
 WHITE = (200, 200, 200)
-WINDOW_HEIGHT = 800
-WINDOW_WIDTH = 1200
+WINDOW_HEIGHT = 600
+WINDOW_WIDTH = 1000
 GRAY = (227, 227, 227)
 BLACK = (20, 20, 20)
 
@@ -25,26 +25,41 @@ payoff_matrix = {
     ("Defect", "Defect"): (1, 1),
 }
 
+def introScreen():
+    global INTRO_SCREEN
+    pygame.init()
+    pygame.font.init()
+    INTRO_SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+
+
 # Main game function
 def main():
     global SCREEN
     pygame.init()
     pygame.font.init()
     SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-    #SCREEN.fill(GRAY)
 
     player_total_score = 0
     opponent_total_score = 0
-    rounds = 0
+    rounds = 1
     max_rounds = 5
     round_complete = False  # Flag to detect if a round is completed
 
     player_choice = None
     opponent_choice = None
 
+
     while True:
         mouseX, mouseY = pygame.mouse.get_pos()
-        SCREEN.fill(GRAY)  # Clear the screen with the background color
+        SCREEN.fill(GRAY)
+        display_scores(player_total_score, opponent_total_score, rounds)
 
         
         cooperate_rect, defect_rect = drawButtons()
@@ -71,7 +86,7 @@ def main():
 
             # Display result and score
             display_result(player_choice, opponent_choice, player_score, opponent_score)
-            display_scores(player_total_score, opponent_total_score, rounds)
+            #display_scores(player_total_score, opponent_total_score, rounds)
 
             pygame.display.update()  # Update the display to show the result
 
@@ -98,6 +113,18 @@ def main():
             player_total_score, opponent_total_score, rounds = reset_game()
 
 
+
+
+# Functions for the intro
+def startButtons():
+    font = pygame.font.SysFont(None, 40)
+
+    start_rect = pygame.Rect(WINDOW_WIDTH // 4 - BUTTON_WIDTH // 2, WINDOW_HEIGHT - 100, BUTTON_WIDTH, BUTTON_HEIGHT)
+
+    intro_text = f"Welcome to the Prisoner's Dilemma. Here you will play against an opponent and both will be given the option to defect or cooperate."
+
+    INTRO_SCREEN.blit()
+### Functions for the main program
 # Draws buttons for cooperating and defecting
 def drawButtons():
     font = pygame.font.SysFont(None, 36)
@@ -144,7 +171,7 @@ def display_result(player_choice, opponent_choice, player_score, opponent_score)
 # Displays the cumulative scores and rounds
 def display_scores(player_total_score, opponent_total_score, rounds):
     font = pygame.font.SysFont(None, 36)
-    score_text = f"Rounds: {rounds} | Your Total Score: {player_total_score} | Opponent's Total Score: {opponent_total_score}"
+    score_text = f"Round: {rounds} | Your Total Score: {player_total_score} | Opponent's Total Score: {opponent_total_score}"
     score_surface = font.render(score_text, True, BLACK)
     SCREEN.blit(score_surface, (WINDOW_WIDTH // 2 - score_surface.get_width() // 2, 50))
 
@@ -160,6 +187,9 @@ def show_final_score(player_total_score, opponent_total_score):
 # Resets the game state for a new game
 def reset_game():
     return 0, 0, 0  # Reset player score, opponent score, and round count to zero
+
+
+
 
 
 main()
