@@ -1,4 +1,3 @@
-from multiprocessing.sharedctypes import Value
 import random
 import matplotlib.pyplot as plt
 from scipy.stats import chisquare
@@ -39,6 +38,7 @@ def strat_titfortat(opponentMoveHistory=None, selfMoveHistory=None):
 
     return "Cooperate"
 
+# Cooperate but tolerate two defects before defecting. Alt. Tit for Two Tats
 def strat_titfortwotats(opponentMoveHistory=None, selfMoveHistory=None):
     if opponentMoveHistory is None or len(opponentMoveHistory) < 2:
         return "Cooperate"
@@ -49,6 +49,7 @@ def strat_titfortwotats(opponentMoveHistory=None, selfMoveHistory=None):
 
     return "Cooperate"
 
+# Tit for tat but there's a chance to test your opponent by doing the opposite move
 def strat_joss(opponentMoveHistory=None, selfMoveHistory=None):
     if len(opponentMoveHistory) < 1:  # First round, no previous moves
         return "Cooperate"
@@ -212,7 +213,8 @@ strat_tideman_chieruzzi.retaliation_count = 0
 strat_tideman_chieruzzi.consecutive_opponent_defections = 0
 strat_tideman_chieruzzi.last_fresh_start = -20  # Track fresh start timing
 
-# Play 50 rounds of tit for tat, defect on the 51st round. Then check if opponent is random or tit for tat. Defect if random, tit for tat if tit for tat, otherwise defect every 5 to 15th round.
+# Play 50 rounds of tit for tat, defect on the 51st round. Then check if opponent is choosing randomly or tit for tat. 
+# Defect if opponent chooses random, tit for tat if tit for tat, otherwise defect every 5 to 15th round.
 def strat_graaskamp(opponentMoveHistory=None, selfMoveHistory=None):
     round_num = len(opponentMoveHistory)
 
@@ -253,7 +255,7 @@ def strat_graaskamp(opponentMoveHistory=None, selfMoveHistory=None):
         #print(p_val)
         # Check if opponent is playing Tit-for-Tat
         if opponentMoveHistory[-3:] == selfMoveHistory[-4:-1]:
-
+            
             strat_graaskamp.tit_for_tat_detected = True
         #print(f" random: {strat_graaskamp.random_opponent_detected}")
         #print(f" Tit4tat: {strat_graaskamp.tit_for_tat_detected}")
@@ -329,7 +331,7 @@ def strat_tullock(opponentMoveHistory=None, selfMoveHistory=None):
         else:
             return "Defect"
 
-# Let the user be a player and choose to defect or cooperate.       
+# Let the user be a player. Mainly used for debugging and not the tournament as a human would not want to play 1000 rounds. 
 def strat_human(opponentMoveHistory=None, selfMoveHistory=None):
     while True:
         choice = input("Defect or Cooperate: ").lower()
@@ -344,7 +346,7 @@ def strat_human(opponentMoveHistory=None, selfMoveHistory=None):
         else:
             print(f"'{choice}' is invalid, try again.")
 
-# Define strategies
+# Define strategies in an array
 strategies = [
     strat_cooperator,
     strat_defector,
@@ -430,6 +432,7 @@ def simulate_tournament(num_rounds):
 
     return results
 
+# Make a bargraph with Matplotlib
 def plot_results(results):
     strategies = list(results.keys())
     scores = list(results.values())

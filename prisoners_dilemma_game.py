@@ -190,6 +190,8 @@ def reset_game():
 
 
 
+introScreen()
 
 
-main()
+
+#main()

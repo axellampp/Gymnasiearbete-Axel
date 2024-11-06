@@ -1,92 +1,28 @@
-# Återskapa Gymnasiearbete 24/25
-
- Axel Lampa
-
-## För återskapandet
-
-Detta examensarbete undersöker _[fångarnas dilemma]_, det vanligaste problemet man stöter på inom spelteori som ofta används för att analysera och få rationella lösningar i konflikter. Problemet går ut på att två individer måste fatta beslut utan att känna till den andres val. Beroende på deras val kan de antingen samarbeta eller agera själviskt, vilket kommer påverka deras resultat. Genom att replikera och simulera Fångarnas dilemma i Visual Studio Code med Python, syftar examensarbetet till att ge en djupare förståelse för de strategier och tankesätt som används för att få det bästa resultatet.
-
-Ett särskilt fokus ligger på att replikera och analysera Robert Axelrods iteration av _[fångarnas dilemma]_, även känd som _Axelrod’s Tournament_, som publicerades i hans verk _[The Evolution of Cooperation]_. Axelrods forskning visar hur samarbete kan uppstå bland konflikter, och detta examensarbete syftar till att replikera, undersöka och validera hans slutsatser genom flera simuleringar.
-
-|  | **Fånge B är tyst** | **Fånge B vittnar** |
-| ------------- | ------------- |---------------|
-| **Fånge A är tyst** | $(R, R)$ | $(S, T)$ |
-| **Fånge A vittnar** | $(T, S)$ | $(P, P)$ |
-
-där
-
-- $R$ (Reward) är resultatet om båda är tyst
-- $T$ (Temptation) är resultatet för att vittna när den andra är tyst
-- $S$ (Sucker) är resultatet för att vara tyst medan den andra vittnar
-- $P$ (Punishment) är resultatet om båda vittnar
-
-och låt
-
-- $R = 3$
-- $T = 5$
-- $S = 0$
-- $P = 1$
-
-Då får vi denna ojämlikhet: $T$ > $R$ > $P$ > $S$
-
-Anta att båda fångar får slumpmässigt välja sin strategi.
-
-- Låt $x$ vara sannolikheten att fånge A är tyst. Då kan $(1-x)$ vara sannolikheten att fånge A agerar för sitt eget bästa, alltså vittnar.
-- Låt $y$ vara sannolikheten att fånge B är tyst. Då kan $(1-y)$ vara sannolikheten att fånge B agerar för sitt eget bästa, alltså vittnar.
-
-Alla möjliga utfall för A kan beräknas utifrån payoff matrisen. Det går som följande:
-
-- Båda är tyst. Detta kan ske med sannolikheten $xy$. Båda fångarna får $R$ som resultat.
-- Fånge A är tyst, fånge B vittnar. Detta kan ske med sannolikheten $x(1-y)$. Fånge A får $S$ som resultat.
-- Fånge A vittnar, fånge B är tyst. Detta kan ske med sannolikheten $(1-x)y$. Fånge A får $T$ som resultat.
-- Båda vittnar. Detta kan ske med sannolikheten $(1-x)(1-y)$. Fånge A får $P$ som resultat.
-
-Förväntade utfall för A blir då summan av allt vilket blir:
-
-$Utfall_A(x, y) = Rxy + Sx(1-y) + Ty(1-x) + P(1-x)(1-y)$
-
-Förenklat så blir detta följande:
-
-$Utfall_A(x, y) = 3xy + 0x(1-y) + 5y(1-x) + 1(1-x)(1-y)$ \
-$Utfall_A(x, y) = 3xy + 5y(1-x) + 1(1-x)(1-y)$
-
-För att fortsätta expanderar vi termerna:
-
-$Utfall_A(x, y) = 3xy + 5y-5xy + 1-y-x+xy$
-
-Vilket till sist blir:
-
-$Utfall_A(x, y) = -xy + 4y + 1 - x$
-
-Samma teori gäller för fånge B:
-
-$Utfall_B(x, y) = Rxy + Tx(1-y) + Sy(1-x) + P(1-x)(1-y)$
-
-Däremot så blir den andra och tredje termens koefficient för resultat omvänt eftersom när fånge A vittnar och fånge B håller tyst så får fånge B $S$ och inte $T$. Förenklingar leder till följande:
-
-$Utfall_B(x, y) = Rxy + Tx(1-y) + Sy(1-x) + P(1-x)(1-y)$ \
-$Utfall_B(x, y) = 3xy + 5x(1-y) + 0y(1-x) + 1(1-x)(1-y)$ \
-$Utfall_B(x, y) = 3xy + 5x −5xy + 1 − y −x + xy$ \
-$Utfall_B(x, y) = -xy + 4x + 1 - y$
-
-Nu kan vi kombinera $Utfall_A(x, y)$ och $Utfall_B(x, y)$ för att få ett enat perspektiv:
-
-$Utfall(x, y) = (-xy+4y+1-x) + (xy+4x+1−y)$ \
-$Utfall(x, y) = -2xy + 3x + 3y + 2$
+# Återskapa Gymnasiearbete 24/25 - Axel Lampa
 
 ## Återskapande
 
-Se till att NumPy, Matplotlib och SciPy är installerade. Detta kan göras som följande i en terminal:
+Allt skrivs i python. <br>
+
+För graferna som beskriver sannolikhet, Se till att NumPy och Matplotlib är installerade i din editor. Kan göras följande i en terminal:
 
 ``` bat
 
+python -m pip install numpy
+pip install matplotlib
+
+```
+
+För de itererade spelen, se till att NumPy, Matplotlib och SciPy är installerade. Kan göras följande i en terminal:
+
+```bat
 python -m pip install numpy
 pip install matplotlib
 pip install scipy
 
 ```
 
-För att återskapa spelet se till att PyGame är installerat. Kan göras vid en terminal som följande:
+För att återskapa spelet se till att PyGame är installerat. Kan göras följande i en terminal:
 
 ```bat
 
@@ -111,7 +47,6 @@ X, Y = np.meshgrid(x, y)
 def payoff_function(X, Y):
     return -X * Y + 4 * Y + 1 - X
 
-
 Z = payoff_function(X, Y)
 
 plt.figure(figsize=(8, 6))
@@ -127,7 +62,6 @@ colorbar.set_ticks(np.arange(int(Z.min()), int(Z.max()) + 1))
 plt.title('Payoff Contour Plot for Prisoner A')
 plt.xlabel('Probability of Player A Cooperating (x)')
 plt.ylabel('Probability of Player B Cooperating (y)')
-
 
 plt.show()
 
@@ -150,7 +84,6 @@ X, Y = np.meshgrid(x, y)
 def payoff_function(X, Y):
     return -2 * X * Y + 3 * X + 3 * Y + 2
 
-
 Z = payoff_function(X, Y)
 
 plt.figure(figsize=(8, 6))
@@ -167,15 +100,13 @@ plt.title('Payoff Contour Plot for Prisoner\'s Dilemma')
 plt.xlabel('Probability of Player A Cooperating (x)')
 plt.ylabel('Probability of Player B Cooperating (y)')
 
-
 plt.show()
 
 ```
 
-Kod för itererade versionen av dilemmat. 13 strategier
+Kod för de itererade spelen (13 strategier):
 
 ``` python
-from multiprocessing.sharedctypes import Value
 import random
 import matplotlib.pyplot as plt
 from scipy.stats import chisquare
@@ -216,6 +147,7 @@ def strat_titfortat(opponentMoveHistory=None, selfMoveHistory=None):
 
     return "Cooperate"
 
+# Cooperate but tolerate two defects before defecting. Alt. Tit for Two Tats
 def strat_titfortwotats(opponentMoveHistory=None, selfMoveHistory=None):
     if opponentMoveHistory is None or len(opponentMoveHistory) < 2:
         return "Cooperate"
@@ -226,6 +158,7 @@ def strat_titfortwotats(opponentMoveHistory=None, selfMoveHistory=None):
 
     return "Cooperate"
 
+# Tit for tat but there's a chance to test your opponent by doing the opposite move
 def strat_joss(opponentMoveHistory=None, selfMoveHistory=None):
     if len(opponentMoveHistory) < 1:  # First round, no previous moves
         return "Cooperate"
@@ -389,7 +322,8 @@ strat_tideman_chieruzzi.retaliation_count = 0
 strat_tideman_chieruzzi.consecutive_opponent_defections = 0
 strat_tideman_chieruzzi.last_fresh_start = -20  # Track fresh start timing
 
-# Play 50 rounds of tit for tat, defect on the 51st round. Then check if opponent is random or tit for tat. Defect if random, tit for tat if tit for tat, otherwise defect every 5 to 15th round.
+# Play 50 rounds of tit for tat, defect on the 51st round. Then check if opponent is choosing randomly or tit for tat. 
+# Defect if opponent chooses random, tit for tat if tit for tat, otherwise defect every 5 to 15th round.
 def strat_graaskamp(opponentMoveHistory=None, selfMoveHistory=None):
     round_num = len(opponentMoveHistory)
 
@@ -430,7 +364,7 @@ def strat_graaskamp(opponentMoveHistory=None, selfMoveHistory=None):
         #print(p_val)
         # Check if opponent is playing Tit-for-Tat
         if opponentMoveHistory[-3:] == selfMoveHistory[-4:-1]:
-
+            
             strat_graaskamp.tit_for_tat_detected = True
         #print(f" random: {strat_graaskamp.random_opponent_detected}")
         #print(f" Tit4tat: {strat_graaskamp.tit_for_tat_detected}")
@@ -506,7 +440,7 @@ def strat_tullock(opponentMoveHistory=None, selfMoveHistory=None):
         else:
             return "Defect"
 
-# Let the user be a player and choose to defect or cooperate.       
+# Let the user be a player. Mainly used for debugging and not the tournament as a human would not want to play 1000 rounds. 
 def strat_human(opponentMoveHistory=None, selfMoveHistory=None):
     while True:
         choice = input("Defect or Cooperate: ").lower()
@@ -521,7 +455,7 @@ def strat_human(opponentMoveHistory=None, selfMoveHistory=None):
         else:
             print(f"'{choice}' is invalid, try again.")
 
-# Define strategies
+# Define strategies in an array
 strategies = [
     strat_cooperator,
     strat_defector,
@@ -598,15 +532,16 @@ def simulate_tournament(num_rounds):
     for n in range(4):
         for i, strategy_A in enumerate(strategies):
             for j, strategy_B in enumerate(strategies):
-                #print(f"Simulating match between {strategy_names[i]} and {strategy_names[j]}")
+                #print(f"Simulating match between {strategy_names[i]} and {strategy_names[j]}") # debug
                 A_score, B_score = simulate_match(strategy_A, strategy_B, num_rounds)
 
-                #print(f"Result: {strategy_names[i]} scored {A_score}, {strategy_names[j]} scored {B_score}")
+                #print(f"Result: {strategy_names[i]} scored {A_score}, {strategy_names[j]} scored {B_score}") # debug
                 results[strategy_names[i]] += A_score
                 results[strategy_names[j]] += B_score
 
     return results
 
+# Make a bargraph with Matplotlib
 def plot_results(results):
     strategies = list(results.keys())
     scores = list(results.values())
@@ -647,8 +582,8 @@ import random
 # Color and window configurations
 GREEN = (25, 105, 25)
 WHITE = (200, 200, 200)
-WINDOW_HEIGHT = 800
-WINDOW_WIDTH = 1200
+WINDOW_HEIGHT = 600
+WINDOW_WIDTH = 1000
 GRAY = (227, 227, 227)
 BLACK = (20, 20, 20)
 
@@ -667,26 +602,41 @@ payoff_matrix = {
     ("Defect", "Defect"): (1, 1),
 }
 
+def introScreen():
+    global INTRO_SCREEN
+    pygame.init()
+    pygame.font.init()
+    INTRO_SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+
+
 # Main game function
 def main():
     global SCREEN
     pygame.init()
     pygame.font.init()
     SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-    #SCREEN.fill(GRAY)
 
     player_total_score = 0
     opponent_total_score = 0
-    rounds = 0
+    rounds = 1
     max_rounds = 5
     round_complete = False  # Flag to detect if a round is completed
 
     player_choice = None
     opponent_choice = None
 
+
     while True:
         mouseX, mouseY = pygame.mouse.get_pos()
-        SCREEN.fill(GRAY)  # Clear the screen with the background color
+        SCREEN.fill(GRAY)
+        display_scores(player_total_score, opponent_total_score, rounds)
 
         
         cooperate_rect, defect_rect = drawButtons()
@@ -713,7 +663,7 @@ def main():
 
             # Display result and score
             display_result(player_choice, opponent_choice, player_score, opponent_score)
-            display_scores(player_total_score, opponent_total_score, rounds)
+            #display_scores(player_total_score, opponent_total_score, rounds)
 
             pygame.display.update()  # Update the display to show the result
 
@@ -740,6 +690,18 @@ def main():
             player_total_score, opponent_total_score, rounds = reset_game()
 
 
+
+
+# Functions for the intro
+def startButtons():
+    font = pygame.font.SysFont(None, 40)
+
+    start_rect = pygame.Rect(WINDOW_WIDTH // 4 - BUTTON_WIDTH // 2, WINDOW_HEIGHT - 100, BUTTON_WIDTH, BUTTON_HEIGHT)
+
+    intro_text = f"Welcome to the Prisoner's Dilemma. Here you will play against an opponent and both will be given the option to defect or cooperate."
+
+    INTRO_SCREEN.blit()
+### Functions for the main program
 # Draws buttons for cooperating and defecting
 def drawButtons():
     font = pygame.font.SysFont(None, 36)
@@ -786,7 +748,7 @@ def display_result(player_choice, opponent_choice, player_score, opponent_score)
 # Displays the cumulative scores and rounds
 def display_scores(player_total_score, opponent_total_score, rounds):
     font = pygame.font.SysFont(None, 36)
-    score_text = f"Rounds: {rounds} | Your Total Score: {player_total_score} | Opponent's Total Score: {opponent_total_score}"
+    score_text = f"Round: {rounds} | Your Total Score: {player_total_score} | Opponent's Total Score: {opponent_total_score}"
     score_surface = font.render(score_text, True, BLACK)
     SCREEN.blit(score_surface, (WINDOW_WIDTH // 2 - score_surface.get_width() // 2, 50))
 
@@ -804,7 +766,13 @@ def reset_game():
     return 0, 0, 0  # Reset player score, opponent score, and round count to zero
 
 
-main()
+
+introScreen()
+
+
+
+#main()
+
 
 ```
 
