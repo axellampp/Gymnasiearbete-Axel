@@ -37,8 +37,6 @@ def introScreen():
                 pygame.quit()
                 sys.exit()
 
-
-
 # Main game function
 def main():
     global SCREEN
@@ -188,10 +186,58 @@ def show_final_score(player_total_score, opponent_total_score):
 def reset_game():
     return 0, 0, 0  # Reset player score, opponent score, and round count to zero
 
-
-
-introScreen()
-
-
+#introScreen()
 
 #main()
+
+FPS = 60
+
+class Game:
+    def __init__(self):
+        pygame.init()
+        self.screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+        self.clock = pygame.time.Clock()
+        
+        self.gameStateManager = GameStateManager('intro')
+        self.start = Start(self.screen, self.gameStateManager)
+        self.intro = Intro(self.screen, self.gameStateManager)
+
+        self.states = {'start':self.start, 'intro':self.intro}
+
+    def run(self):
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+            self.states[self.gameStateManager.get_state()].run()
+
+            pygame.display.update()
+            self.clock.tick(FPS)
+
+class Intro:
+    def __init__(self, display, gameStateManager):
+        self.display = display
+        self.gameStateManager = gameStateManager
+    def run(self):
+        self.display.fill('blue')
+
+class Start:
+    def __init__(self, display, gameStateManager):
+        self.display = display
+        self.gameStateManager = gameStateManager
+    def run(self):
+        self.display.fill('red')
+
+class GameStateManager:
+    def __init__(self, currentState):
+        self.currentState = currentState
+    def get_state(self):
+        return self.currentState
+    def set_state(self, state):
+        self.currentState = state
+
+if __name__ == '__main__':
+    game = Game()
+    game.run()
