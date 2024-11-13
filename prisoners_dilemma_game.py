@@ -1,3 +1,4 @@
+from turtle import Screen
 import pygame
 import sys
 import random
@@ -186,8 +187,6 @@ def show_final_score(player_total_score, opponent_total_score):
 def reset_game():
     return 0, 0, 0  # Reset player score, opponent score, and round count to zero
 
-#introScreen()
-
 #main()
 
 FPS = 60
@@ -199,10 +198,10 @@ class Game:
         self.clock = pygame.time.Clock()
         
         self.gameStateManager = GameStateManager('intro')
-        self.start = Start(self.screen, self.gameStateManager)
+        self.splashScreen = SplashScreen(self.screen, self.gameStateManager)
         self.intro = Intro(self.screen, self.gameStateManager)
 
-        self.states = {'start':self.start, 'intro':self.intro}
+        self.states = {'splashScreen':self.splashScreen, 'intro':self.intro}
 
     def run(self):
         while True:
@@ -214,6 +213,7 @@ class Game:
             self.states[self.gameStateManager.get_state()].run()
 
             pygame.display.update()
+            pygame.font.init()
             self.clock.tick(FPS)
 
 class Intro:
@@ -223,12 +223,25 @@ class Intro:
     def run(self):
         self.display.fill('blue')
 
-class Start:
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_SPACE]:
+            self.gameStateManager.set_state('splashScreen')
+
+class SplashScreen:
     def __init__(self, display, gameStateManager):
         self.display = display
         self.gameStateManager = gameStateManager
+        self.header_font = pygame.font.SysFont('freesansbold.ttf', 60)
+        self.body_text = pygame.font.SysFont('freesansbold.ttf', 35)
+
     def run(self):
-        self.display.fill('red')
+        self.display.fill(BLACK)
+        self.header_surface = self.header_font.render('Innan du kör', True, WHITE)
+        self.display.blit(self.header_surface, (WINDOW_WIDTH // 2 - self.header_surface.get_width() // 2, 50))
+
+        self.text_surface = self.body_text.render('Du och en annan fånge har begått ett brot lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum', True, WHITE)
+        self.display.blit(self.text_surface, (WINDOW_WIDTH // 2 - self.text_surface.get_width() // 2, 120))
+        
 
 class GameStateManager:
     def __init__(self, currentState):
