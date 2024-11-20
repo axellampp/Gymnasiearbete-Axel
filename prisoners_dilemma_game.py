@@ -1,200 +1,24 @@
-from turtle import Screen
 import pygame
 import sys
 import random
 
-# Color and window configurations
-GREEN = (25, 105, 25)
-WHITE = (200, 200, 200)
-WINDOW_HEIGHT = 600
-WINDOW_WIDTH = 1000
-GRAY = (227, 227, 227)
+### Constants
+FPS = 60
+
+WHITE = (240, 240, 240)
+WINDOW_HEIGHT = 720
+WINDOW_WIDTH = 1280
 BLACK = (20, 20, 20)
+
+COOPERATE_COLOR = (0, 140, 255)
+DEFECT_COLOR = (255, 140, 0)
 
 BUTTON_WIDTH = 180
 BUTTON_HEIGHT = BUTTON_WIDTH / 2.5
 BUTTON_RADIUS = 8
 
-TABLE_START_POS = 270
-TABLE_OFFSET = 250
-
-COOPERATE_COLOR = (0, 140, 255)
-DEFECT_COLOR = (255, 140, 0)
-
-# Payoff matrix for Prisoner's Dilemma
-payoff_matrix = {
-    ("Cooperate", "Cooperate"): (3, 3),
-    ("Cooperate", "Defect"): (0, 5),
-    ("Defect", "Cooperate"): (5, 0),
-    ("Defect", "Defect"): (1, 1),
-}
-
-def introScreen():
-    global INTRO_SCREEN
-    pygame.init()
-    pygame.font.init()
-    INTRO_SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
-# Main game function
-def main():
-    global SCREEN
-    pygame.init()
-    pygame.font.init()
-    SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-
-    player_total_score = 0
-    opponent_total_score = 0
-    rounds = 1
-    max_rounds = 5
-    round_complete = False  # Flag to detect if a round is completed
-
-    player_choice = None
-    opponent_choice = None
-
-
-    while True:
-        mouseX, mouseY = pygame.mouse.get_pos()
-        SCREEN.fill(GRAY)
-        display_scores(player_total_score, opponent_total_score, rounds)
-
-        
-        cooperate_rect, defect_rect = drawButtons()
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
-            if event.type == pygame.MOUSEBUTTONDOWN and not round_complete:
-                if cooperate_rect.collidepoint(mouseX, mouseY):
-                    player_choice = "Cooperate"
-                    opponent_choice = random.choice(["Cooperate", "Defect"])
-                elif defect_rect.collidepoint(mouseX, mouseY):
-                    player_choice = "Defect"
-                    opponent_choice = random.choice(["Cooperate", "Defect"])
-
-        # Once a choice is made, simulate the round and display results
-        if player_choice and opponent_choice and not round_complete:
-            player_score, opponent_score = simulate_round(player_choice, opponent_choice)
-            player_total_score += player_score
-            opponent_total_score += opponent_score
-            rounds += 1
-
-            # Display result and score
-            display_result(player_choice, opponent_choice, player_score, opponent_score)
-            #display_scores(player_total_score, opponent_total_score, rounds)
-
-            pygame.display.update()  # Update the display to show the result
-
-            # Wait 5 seconds so the player can see the result before next round
-            pygame.time.wait(5000)
-
-            # Mark round as complete
-            round_complete = True
-            player_choice = None
-            opponent_choice = None
-
-        # Reset for next round
-        if round_complete:
-            round_complete = False  # Reset flag to indicate the next round can begin
-
-        pygame.display.update()
-
-        # Check if max rounds are reached
-        if rounds >= max_rounds:
-            SCREEN.fill(GRAY)  # Clear the screen just before displaying the results
-
-            show_final_score(player_total_score, opponent_total_score)
-            pygame.time.wait(6000)  # Wait for 6 seconds before resetting
-            player_total_score, opponent_total_score, rounds = reset_game()
-
-
-
-
-# Functions for the intro
-def startButtons():
-    font = pygame.font.SysFont(None, 40)
-
-    start_rect = pygame.Rect(WINDOW_WIDTH // 4 - BUTTON_WIDTH // 2, WINDOW_HEIGHT - 100, BUTTON_WIDTH, BUTTON_HEIGHT)
-
-    intro_text = f"Welcome to the Prisoner's Dilemma. Here you will play against an opponent and both will be given the option to defect or cooperate."
-
-    INTRO_SCREEN.blit()
-### Functions for the main program
-# Draws buttons for cooperating and defecting
-def drawButtons():
-    font = pygame.font.SysFont(None, 36)
-
-    # Cooperate button
-    cooperate_rect = pygame.Rect(WINDOW_WIDTH // 4 - BUTTON_WIDTH // 2, WINDOW_HEIGHT - 100, BUTTON_WIDTH, BUTTON_HEIGHT)
-    pygame.draw.rect(SCREEN, COOPERATE_COLOR, cooperate_rect, border_radius=BUTTON_RADIUS)
-    pygame.draw.rect(SCREEN, BLACK, cooperate_rect, 3, border_radius=BUTTON_RADIUS)
-    cooperate_text = font.render("Cooperate", True, BLACK)
-    
-    # Center the text on the button
-    text_rect = cooperate_text.get_rect(center=(cooperate_rect.centerx, cooperate_rect.centery))
-    SCREEN.blit(cooperate_text, text_rect)
-
-    # Defect button
-    defect_rect = pygame.Rect(3 * WINDOW_WIDTH // 4 - BUTTON_WIDTH // 2, WINDOW_HEIGHT - 100, BUTTON_WIDTH, BUTTON_HEIGHT)
-    pygame.draw.rect(SCREEN, DEFECT_COLOR, defect_rect, border_radius=BUTTON_RADIUS)
-    pygame.draw.rect(SCREEN, BLACK, defect_rect, 3, border_radius=BUTTON_RADIUS)
-    defect_text = font.render("Defect", True, BLACK)
-    
-    # Center the text on the button
-    text_rect = defect_text.get_rect(center=(defect_rect.centerx, defect_rect.centery))
-    SCREEN.blit(defect_text, text_rect)
-
-    return cooperate_rect, defect_rect
-
-
-# Function for simulating one round
-def simulate_round(A_choice, B_choice):
-    return payoff_matrix[(A_choice, B_choice)]
-
-# Displays the result for a single round
-def display_result(player_choice, opponent_choice, player_score, opponent_score):
-    font = pygame.font.SysFont(None, 48)
-    result_text = f"You chose {player_choice}, Opponent chose {opponent_choice}"
-    score_text = f"You got: {player_score} points, Opponent got: {opponent_score} points"
-
-    result_surface = font.render(result_text, True, BLACK)
-    score_surface = font.render(score_text, True, BLACK)
-
-    SCREEN.blit(result_surface, (WINDOW_WIDTH // 2 - result_surface.get_width() // 2, WINDOW_HEIGHT // 2 - 100))
-    SCREEN.blit(score_surface, (WINDOW_WIDTH // 2 - score_surface.get_width() // 2, WINDOW_HEIGHT // 2))
-
-# Displays the cumulative scores and rounds
-def display_scores(player_total_score, opponent_total_score, rounds):
-    font = pygame.font.SysFont(None, 36)
-    score_text = f"Round: {rounds} | Your Total Score: {player_total_score} | Opponent's Total Score: {opponent_total_score}"
-    score_surface = font.render(score_text, True, BLACK)
-    SCREEN.blit(score_surface, (WINDOW_WIDTH // 2 - score_surface.get_width() // 2, 50))
-
-# Shows the final score after all rounds
-def show_final_score(player_total_score, opponent_total_score):
-    font = pygame.font.SysFont(None, 40)
-    final_text = f"Game Over! Final Score: You got {player_total_score} points - Opponent got {opponent_total_score} points"
-    final_surface = font.render(final_text, True, BLACK)
-
-    SCREEN.blit(final_surface, (WINDOW_WIDTH // 2 - final_surface.get_width() // 2, WINDOW_HEIGHT // 2 - 50))
-    pygame.display.update()
-
-# Resets the game state for a new game
-def reset_game():
-    return 0, 0, 0  # Reset player score, opponent score, and round count to zero
-
-#main()
-
-FPS = 60
-
-class Game:
+# Class for switching states
+class Main:
     def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -203,8 +27,9 @@ class Game:
         self.gameStateManager = GameStateManager('intro')
         self.splashScreen = SplashScreen(self.screen, self.gameStateManager)
         self.intro = Intro(self.screen, self.gameStateManager)
+        self.game = Game(self.screen, self.gameStateManager)
 
-        self.states = {'splashScreen':self.splashScreen, 'intro':self.intro}
+        self.states = {'splashScreen':self.splashScreen, 'intro':self.intro, 'game':self.game}
 
     def run(self):
         while True:
@@ -223,11 +48,24 @@ class Intro:
     def __init__(self, display, gameStateManager):
         self.display = display
         self.gameStateManager = gameStateManager
-    def run(self):
-        self.display.fill('blue')
+        self.header_font = pygame.font.SysFont('freesansbold.ttf', 84)
+        self.subheader_font = pygame.font.SysFont('freesansbold.ttf', 30)
+        self.start_text = pygame.font.SysFont('freesansbold.ttf', 50)
 
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_SPACE]:
+    def run(self):
+        self.display.fill(BLACK)
+
+        # Texts
+        self.header_surface = self.header_font.render('Fångarnas Dilemma', True, WHITE)
+        self.subheader_surface = self.subheader_font.render('Det mest klassiska problemet inom spelteori', True, WHITE)
+        self.start_surface = self.start_text.render('Tryck på mellanslag för att börja spela', True, WHITE)
+
+        self.display.blit(self.header_surface, (WINDOW_WIDTH // 2 - self.header_surface.get_width() // 2, 50))
+        self.display.blit(self.subheader_surface, (WINDOW_WIDTH // 2 - self.subheader_surface.get_width() // 2, 150))
+        self.display.blit(self.start_surface, ( WINDOW_WIDTH // 2 - self.start_surface.get_width() // 2, 3 * WINDOW_HEIGHT // 4))
+
+        self.keys = pygame.key.get_pressed()
+        if self.keys[pygame.K_SPACE]:
             self.gameStateManager.set_state('splashScreen')
 
 class SplashScreen:
@@ -235,37 +73,142 @@ class SplashScreen:
         self.display = display
         self.gameStateManager = gameStateManager
         self.header_font = pygame.font.SysFont('freesansbold.ttf', 60)
-        self.body_text = pygame.font.SysFont('freesansbold.ttf', 30)
+        self.body_font = pygame.font.SysFont('freesansbold.ttf', 30)
 
+    def render_text_centered(self, text, font, y_pos, color):
+        surface = font.render(text, True, color)
+        x_pos = WINDOW_WIDTH // 2 - surface.get_width() // 2
+        self.display.blit(surface, (x_pos, y_pos))
 
     def run(self):
         self.display.fill(BLACK)
-        self.header_surface = self.header_font.render('Innan du kör', True, WHITE)
-        self.display.blit(self.header_surface, (WINDOW_WIDTH // 2 - self.header_surface.get_width() // 2, 50))
 
-        self.text_surface1 = self.body_text.render('Du och en annan fånge är misstänkta för att ha begått ett brott och ska straffas.', True, WHITE)
-        self.text_surface2 = self.body_text.render('Du och medbrottslingen får välja att antingen vittna eller', True, WHITE)
-        self.text_surface3 = self.body_text.render('vara tyst, men ni känner inte till den andres val. Hur väljer du att agera?', True, WHITE)
+        # Header
+        self.render_text_centered('Innan du kör', self.header_font, 50, WHITE)
 
-        self.payoff_surface1 = self.body_text.render('Straffet kan ritas som följande:', True, WHITE)
+        # List of body text strings and their corresponding vertical positions
+        self.body_texts = [
+            ('Du och en annan fånge är misstänkta för att ha begått brott och ska straffas.', 120),
+            ('Du och medbrottslingen kan välja att antingen vittna eller tiga, ', 150),
+            ('men ni vet inte den andres val. Hur väljer du att agera?', 180),
+            ('Straffen kan ritas som följande baserat på ditt val:', 220),
+            ('Tryck på mellanslag för att fortsätta', WINDOW_HEIGHT - 50)
+        ]
 
-        self.display.blit(self.text_surface1, (WINDOW_WIDTH // 2 - self.text_surface1.get_width() // 2, 120))
-        self.display.blit(self.text_surface2, (WINDOW_WIDTH // 2 - self.text_surface2.get_width() // 2, 150))
-        self.display.blit(self.text_surface3, (WINDOW_WIDTH // 2 - self.text_surface3.get_width() // 2, 180))
-        self.display.blit(self.payoff_surface1, (WINDOW_WIDTH // 2 - self.payoff_surface1.get_width() // 2, 230))
+        # Render each line of body text
+        for text, y_pos in self.body_texts:
+            self.render_text_centered(text, self.body_font, y_pos, WHITE)
 
-        def drawPayoffMatrix(self):
-            pygame.draw.line(self.display, WHITE, (WINDOW_WIDTH // 2 - TABLE_OFFSET, TABLE_START_POS), (WINDOW_WIDTH // 2 + TABLE_OFFSET, TABLE_START_POS))
-            pygame.draw.line(self.display, WHITE, (WINDOW_WIDTH // 2 - TABLE_OFFSET, TABLE_START_POS), (WINDOW_WIDTH // 2 - TABLE_OFFSET, 3 * WINDOW_HEIGHT // 4 + TABLE_OFFSET // 2))
-            pygame.draw.line(self.display, WHITE, (WINDOW_WIDTH // 2 + TABLE_OFFSET, TABLE_START_POS), (WINDOW_WIDTH // 2 + TABLE_OFFSET, 3 * WINDOW_HEIGHT // 4 + TABLE_OFFSET // 2))
-            pygame.draw.line(self.display, WHITE, (WINDOW_WIDTH // 2 - TABLE_OFFSET, 3 * WINDOW_HEIGHT // 4 + TABLE_OFFSET // 2), (WINDOW_WIDTH // 2 + TABLE_OFFSET, 3 * WINDOW_HEIGHT // 4 + TABLE_OFFSET // 2))
+        matrix_width, matrix_height = 400 * 1182/1080, 400
+        self.imp = pygame.image.load("payoffmatrix1.png")
+        self.imp = pygame.transform.scale(self.imp, (matrix_width, matrix_height))
+        self.display.blit(self.imp, (WINDOW_WIDTH // 2 - self.imp.get_width() // 2, 240))  
 
-            pygame.draw.line(self.display, WHITE, (WINDOW_WIDTH // 2 - TABLE_OFFSET, 360), (WINDOW_WIDTH // 2 + TABLE_OFFSET, 360))
-            pygame.draw.line(self.display, WHITE, (WINDOW_WIDTH // 2 - TABLE_OFFSET + 90, TABLE_START_POS), (WINDOW_WIDTH // 2 - TABLE_OFFSET + 90, 3 * WINDOW_HEIGHT // 4 + TABLE_OFFSET // 2))
+        self.keys = pygame.key.get_pressed()
+        if self.keys[pygame.K_e]:
+            self.gameStateManager.set_state('game')     
 
-        drawPayoffMatrix(self)
+class Game():
+    def __init__(self, display, gameStateManager):
+        self.display = display
+        self.gameStateManager = gameStateManager
+        self.payoff_matrix = {
+            ("tiga", "tiga"): (1, 1),
+            ("tiga", "vittna"): (5, 0),
+            ("vittna", "tiga"): (0, 5),
+            ("vittna", "vittna"): (3, 3),
+        }
+        self.header_font = pygame.font.SysFont('freesansbold.ttf', 60)
+        self.body_font = pygame.font.SysFont('freesansbold.ttf', 30)
+        self.result_font = pygame.font.SysFont('freesansbold.ttf', 50)
+        self.player_choice = None
+        self.opponent_choice = None
+        self.result = None
 
-        
+    # Helper method to render and blit text centered on the screen
+    def render_text_centered(self, text, font, y_pos, color):
+        surface = font.render(text, True, color)
+        x_pos = self.display.get_width() // 2 - surface.get_width() // 2
+        self.display.blit(surface, (x_pos, y_pos))
+
+    # Helper method to get the opponents choice
+    def get_opponent_choice(self):
+        return random.choice(["tiga", "vittna"])
+
+    def calculate_result(self):
+        self.result = self.payoff_matrix[(self.player_choice, self.opponent_choice)]
+
+    # Display the choices
+    def draw_choices(self):
+        self.render_text_centered('Vad väljer du att göra?:', self.header_font, WINDOW_HEIGHT // 8, WHITE)
+
+        # Define the buttons positions and size
+        self.cooperate_rect = pygame.Rect((WINDOW_WIDTH // 2) - (BUTTON_WIDTH * 1.5), WINDOW_HEIGHT // 4, BUTTON_WIDTH, BUTTON_HEIGHT)
+        self.defect_rect = pygame.Rect((WINDOW_WIDTH // 2) + (BUTTON_WIDTH * 0.5), WINDOW_HEIGHT // 4, BUTTON_WIDTH, BUTTON_HEIGHT)
+
+        #  ive it colour
+        pygame.draw.rect(self.display, COOPERATE_COLOR, self.cooperate_rect)
+        pygame.draw.rect(self.display, DEFECT_COLOR, self.defect_rect)
+
+        pygame.draw.rect(self.display, COOPERATE_COLOR, self.cooperate_rect, border_radius=BUTTON_RADIUS)
+        pygame.draw.rect(self.display, DEFECT_COLOR, self.defect_rect, border_radius=BUTTON_RADIUS)
+        self.cooperate_text = self.body_font.render("TIGA", True, BLACK)
+        self.defect_text = self.body_font.render("VITTNA", True, BLACK)
+
+       
+        # Center the texts on the buttons
+        self.text_rect = self.cooperate_text.get_rect(center=(self.cooperate_rect.centerx, self.cooperate_rect.centery))
+        self.display.blit(self.cooperate_text, self.text_rect)
+
+        text_rect = self.defect_text.get_rect(center=(self.defect_rect.centerx, self.defect_rect.centery))
+        self.display.blit(self.defect_text, text_rect)
+
+        # Help the user with a payoff matrix
+        matrix_width, matrix_height = 400 * 1182/1080, 400
+        self.imp = pygame.image.load("payoffmatrix1.png")
+        self.imp = pygame.transform.scale(self.imp, (matrix_width, matrix_height))
+        self.display.blit(self.imp, (WINDOW_WIDTH // 2 - self.imp.get_width() // 2,  2 * WINDOW_HEIGHT // 5))
+
+
+        return self.cooperate_rect, self.defect_rect
+
+    def draw_result(self):
+        self.render_text_centered(f'Du valde att {self.player_choice}', self.result_font, 100, WHITE)
+        self.render_text_centered(f'Andra fången valde att {self.opponent_choice}', self.result_font, 150, WHITE)
+        self.render_text_centered(f'Resultat: ', self.result_font, 250, WHITE)
+        self.render_text_centered(f'Du fick {self.result[0]} år i fängelse.', self.body_font, 300, WHITE)
+        self.render_text_centered(f'Andra fången fick {self.result[1]} år i fängelse.', self.body_font, 330, WHITE)
+
+    def run(self):
+        running = True
+        clock = pygame.time.Clock()
+        while running:
+            self.display.fill(BLACK)
+
+            if self.player_choice is None:
+                cooperate_rect, defect_rect = self.draw_choices()
+            else:
+                if self.result is None:
+                    self.opponent_choice = self.get_opponent_choice()
+                    self.calculate_result()
+                self.draw_result()
+
+            pygame.display.flip()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                    pygame.quit()
+                    sys.exit()
+
+                if event.type == pygame.MOUSEBUTTONDOWN and self.player_choice is None:
+                    mouse_pos = pygame.mouse.get_pos()
+                    if cooperate_rect.collidepoint(mouse_pos):
+                        self.player_choice = "tiga"
+                    elif defect_rect.collidepoint(mouse_pos):
+                        self.player_choice = "vittna"
+
+            clock.tick(FPS)
 
 class GameStateManager:
     def __init__(self, currentState):
@@ -276,5 +219,5 @@ class GameStateManager:
         self.currentState = state
 
 if __name__ == '__main__':
-    game = Game()
+    game = Main()
     game.run()
