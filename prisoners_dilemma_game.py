@@ -15,6 +15,9 @@ BUTTON_WIDTH = 180
 BUTTON_HEIGHT = BUTTON_WIDTH / 2.5
 BUTTON_RADIUS = 8
 
+TABLE_START_POS = 270
+TABLE_OFFSET = 250
+
 COOPERATE_COLOR = (0, 140, 255)
 DEFECT_COLOR = (255, 140, 0)
 
@@ -232,15 +235,36 @@ class SplashScreen:
         self.display = display
         self.gameStateManager = gameStateManager
         self.header_font = pygame.font.SysFont('freesansbold.ttf', 60)
-        self.body_text = pygame.font.SysFont('freesansbold.ttf', 35)
+        self.body_text = pygame.font.SysFont('freesansbold.ttf', 30)
+
 
     def run(self):
         self.display.fill(BLACK)
         self.header_surface = self.header_font.render('Innan du kör', True, WHITE)
         self.display.blit(self.header_surface, (WINDOW_WIDTH // 2 - self.header_surface.get_width() // 2, 50))
 
-        self.text_surface = self.body_text.render('Du och en annan fånge har begått ett brot lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum', True, WHITE)
-        self.display.blit(self.text_surface, (WINDOW_WIDTH // 2 - self.text_surface.get_width() // 2, 120))
+        self.text_surface1 = self.body_text.render('Du och en annan fånge är misstänkta för att ha begått ett brott och ska straffas.', True, WHITE)
+        self.text_surface2 = self.body_text.render('Du och medbrottslingen får välja att antingen vittna eller', True, WHITE)
+        self.text_surface3 = self.body_text.render('vara tyst, men ni känner inte till den andres val. Hur väljer du att agera?', True, WHITE)
+
+        self.payoff_surface1 = self.body_text.render('Straffet kan ritas som följande:', True, WHITE)
+
+        self.display.blit(self.text_surface1, (WINDOW_WIDTH // 2 - self.text_surface1.get_width() // 2, 120))
+        self.display.blit(self.text_surface2, (WINDOW_WIDTH // 2 - self.text_surface2.get_width() // 2, 150))
+        self.display.blit(self.text_surface3, (WINDOW_WIDTH // 2 - self.text_surface3.get_width() // 2, 180))
+        self.display.blit(self.payoff_surface1, (WINDOW_WIDTH // 2 - self.payoff_surface1.get_width() // 2, 230))
+
+        def drawPayoffMatrix(self):
+            pygame.draw.line(self.display, WHITE, (WINDOW_WIDTH // 2 - TABLE_OFFSET, TABLE_START_POS), (WINDOW_WIDTH // 2 + TABLE_OFFSET, TABLE_START_POS))
+            pygame.draw.line(self.display, WHITE, (WINDOW_WIDTH // 2 - TABLE_OFFSET, TABLE_START_POS), (WINDOW_WIDTH // 2 - TABLE_OFFSET, 3 * WINDOW_HEIGHT // 4 + TABLE_OFFSET // 2))
+            pygame.draw.line(self.display, WHITE, (WINDOW_WIDTH // 2 + TABLE_OFFSET, TABLE_START_POS), (WINDOW_WIDTH // 2 + TABLE_OFFSET, 3 * WINDOW_HEIGHT // 4 + TABLE_OFFSET // 2))
+            pygame.draw.line(self.display, WHITE, (WINDOW_WIDTH // 2 - TABLE_OFFSET, 3 * WINDOW_HEIGHT // 4 + TABLE_OFFSET // 2), (WINDOW_WIDTH // 2 + TABLE_OFFSET, 3 * WINDOW_HEIGHT // 4 + TABLE_OFFSET // 2))
+
+            pygame.draw.line(self.display, WHITE, (WINDOW_WIDTH // 2 - TABLE_OFFSET, 360), (WINDOW_WIDTH // 2 + TABLE_OFFSET, 360))
+            pygame.draw.line(self.display, WHITE, (WINDOW_WIDTH // 2 - TABLE_OFFSET + 90, TABLE_START_POS), (WINDOW_WIDTH // 2 - TABLE_OFFSET + 90, 3 * WINDOW_HEIGHT // 4 + TABLE_OFFSET // 2))
+
+        drawPayoffMatrix(self)
+
         
 
 class GameStateManager:
