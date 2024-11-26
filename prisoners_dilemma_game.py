@@ -1,3 +1,4 @@
+from turtle import window_height, window_width
 import pygame
 import sys
 import random
@@ -10,6 +11,7 @@ WINDOW_HEIGHT = 720
 WINDOW_WIDTH = 1280
 BLACK = (20, 20, 20)
 
+START_RECT_COLOR = (60, 179, 113)
 COOPERATE_COLOR = (0, 140, 255)
 DEFECT_COLOR = (255, 140, 0)
 
@@ -50,7 +52,7 @@ class Intro:
         self.gameStateManager = gameStateManager
         self.header_font = pygame.font.SysFont('freesansbold.ttf', 84)
         self.subheader_font = pygame.font.SysFont('freesansbold.ttf', 30)
-        self.start_text = pygame.font.SysFont('freesansbold.ttf', 50)
+        self.start_font = pygame.font.SysFont('freesansbold.ttf', 50)
 
     def run(self):
         self.display.fill(BLACK)
@@ -58,14 +60,28 @@ class Intro:
         # Texts
         self.header_surface = self.header_font.render('Fångarnas Dilemma', True, WHITE)
         self.subheader_surface = self.subheader_font.render('Det mest klassiska problemet inom spelteori', True, WHITE)
-        self.start_surface = self.start_text.render('Tryck på mellanslag för att börja spela', True, WHITE)
+        self.start_button_text = self.start_font.render('STARTA', True, WHITE)
+        self.start_surface = self.subheader_font.render('Rör STARTA för att börja!', True, WHITE)
 
         self.display.blit(self.header_surface, (WINDOW_WIDTH // 2 - self.header_surface.get_width() // 2, 50))
         self.display.blit(self.subheader_surface, (WINDOW_WIDTH // 2 - self.subheader_surface.get_width() // 2, 150))
-        self.display.blit(self.start_surface, ( WINDOW_WIDTH // 2 - self.start_surface.get_width() // 2, 3 * WINDOW_HEIGHT // 4))
+        self.display.blit(self.start_surface, (WINDOW_WIDTH // 2 - self.subheader_surface.get_width() // 2, 2.5 * WINDOW_HEIGHT // 4))
 
-        self.keys = pygame.key.get_pressed()
-        if self.keys[pygame.K_SPACE]:
+        # Start button
+        # Define the buttons positions and size
+        start_rect = pygame.Rect((WINDOW_WIDTH // 2 - BUTTON_WIDTH // 2), 3 * WINDOW_HEIGHT // 4, BUTTON_WIDTH, BUTTON_HEIGHT)
+
+        # Give colour
+        pygame.draw.rect(self.display, START_RECT_COLOR, start_rect)
+        pygame.draw.rect(self.display, START_RECT_COLOR, start_rect, border_radius=BUTTON_RADIUS)
+       
+        # Center the text on the button
+        self.text_rect = self.start_button_text.get_rect(center=(start_rect.centerx, start_rect.centery))
+        self.display.blit(self.start_button_text, self.text_rect)
+
+        mouse_pos = pygame.mouse.get_pos()
+        if start_rect.collidepoint(mouse_pos):
+            pygame.time.wait(500)
             self.gameStateManager.set_state('splashScreen')
 
 class SplashScreen:
@@ -99,13 +115,13 @@ class SplashScreen:
         for text, y_pos in self.body_texts:
             self.render_text_centered(text, self.body_font, y_pos, WHITE)
 
-        matrix_width, matrix_height = 400 * 1182/1080, 400
+        matrix_width, matrix_height = 400 * 1182/1080, 400 # 1182 is the width and 1080 is the height, thus the specific numbers
         self.imp = pygame.image.load("payoffmatrix1.png")
         self.imp = pygame.transform.scale(self.imp, (matrix_width, matrix_height))
         self.display.blit(self.imp, (WINDOW_WIDTH // 2 - self.imp.get_width() // 2, 240))  
 
         self.keys = pygame.key.get_pressed()
-        if self.keys[pygame.K_e]:
+        if self.keys[pygame.K_SPACE]:
             self.gameStateManager.set_state('game')     
 
 class Game():
@@ -146,7 +162,7 @@ class Game():
         self.cooperate_rect = pygame.Rect((WINDOW_WIDTH // 2) - (BUTTON_WIDTH * 1.5), WINDOW_HEIGHT // 4, BUTTON_WIDTH, BUTTON_HEIGHT)
         self.defect_rect = pygame.Rect((WINDOW_WIDTH // 2) + (BUTTON_WIDTH * 0.5), WINDOW_HEIGHT // 4, BUTTON_WIDTH, BUTTON_HEIGHT)
 
-        #  ive it colour
+        # Give colour
         pygame.draw.rect(self.display, COOPERATE_COLOR, self.cooperate_rect)
         pygame.draw.rect(self.display, DEFECT_COLOR, self.defect_rect)
 

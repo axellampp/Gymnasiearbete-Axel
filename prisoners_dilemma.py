@@ -418,7 +418,6 @@ def simulate_match(A_strategy, B_strategy, num_rounds):
 
 # simulate_tournament() simulates the whole tournament for n rounds
 def simulate_tournament(num_rounds):
-
     results = {name: 0 for name in strategy_names}
     for n in range(4):
         for i, strategy_A in enumerate(strategies):
