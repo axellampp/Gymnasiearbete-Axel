@@ -1,3 +1,4 @@
+from ast import Pass
 from turtle import window_height, window_width
 import pygame
 import sys
@@ -7,8 +8,8 @@ import random
 FPS = 60
 
 WHITE = (240, 240, 240)
-WINDOW_HEIGHT = 720
 WINDOW_WIDTH = 1280
+WINDOW_HEIGHT = 720
 BLACK = (20, 20, 20)
 
 START_RECT_COLOR = (60, 179, 113)
@@ -65,7 +66,7 @@ class Intro:
 
         self.display.blit(self.header_surface, (WINDOW_WIDTH // 2 - self.header_surface.get_width() // 2, 50))
         self.display.blit(self.subheader_surface, (WINDOW_WIDTH // 2 - self.subheader_surface.get_width() // 2, 150))
-        self.display.blit(self.start_surface, (WINDOW_WIDTH // 2 - self.subheader_surface.get_width() // 2, 2.5 * WINDOW_HEIGHT // 4))
+        self.display.blit(self.start_surface, (WINDOW_WIDTH // 2 - self.start_surface.get_width() // 2, 2.8 * WINDOW_HEIGHT // 4))
 
         # Start button
         # Define the buttons positions and size
@@ -91,7 +92,7 @@ class SplashScreen:
         self.header_font = pygame.font.SysFont('freesansbold.ttf', 60)
         self.body_font = pygame.font.SysFont('freesansbold.ttf', 30)
 
-    def render_text_centered(self, text, font, y_pos, color):
+    def render_text(self, text, font, y_pos, color):
         surface = font.render(text, True, color)
         x_pos = WINDOW_WIDTH // 2 - surface.get_width() // 2
         self.display.blit(surface, (x_pos, y_pos))
@@ -100,7 +101,7 @@ class SplashScreen:
         self.display.fill(BLACK)
 
         # Header
-        self.render_text_centered('Innan du kör', self.header_font, 50, WHITE)
+        self.render_text('Innan du kör', self.header_font, 50, WHITE)
 
         # List of body text strings and their corresponding vertical positions
         self.body_texts = [
@@ -113,7 +114,7 @@ class SplashScreen:
 
         # Render each line of body text
         for text, y_pos in self.body_texts:
-            self.render_text_centered(text, self.body_font, y_pos, WHITE)
+            self.render_text(text, self.body_font, y_pos, WHITE)
 
         matrix_width, matrix_height = 400 * 1182/1080, 400 # 1182 is the width and 1080 is the height, thus the specific numbers
         self.imp = pygame.image.load("payoffmatrix1.png")
@@ -142,7 +143,7 @@ class Game():
         self.result = None
 
     # Helper method to render and blit text centered on the screen
-    def render_text_centered(self, text, font, y_pos, color):
+    def render_text(self, text, font, y_pos, color):
         surface = font.render(text, True, color)
         x_pos = self.display.get_width() // 2 - surface.get_width() // 2
         self.display.blit(surface, (x_pos, y_pos))
@@ -156,7 +157,7 @@ class Game():
 
     # Display the choices
     def draw_choices(self):
-        self.render_text_centered('Vad väljer du att göra?:', self.header_font, WINDOW_HEIGHT // 8, WHITE)
+        self.render_text('Vad väljer du att göra?:', self.header_font, WINDOW_HEIGHT // 8, WHITE)
 
         # Define the buttons positions and size
         self.cooperate_rect = pygame.Rect((WINDOW_WIDTH // 2) - (BUTTON_WIDTH * 1.5), WINDOW_HEIGHT // 4, BUTTON_WIDTH, BUTTON_HEIGHT)
@@ -189,11 +190,17 @@ class Game():
         return self.cooperate_rect, self.defect_rect
 
     def draw_result(self):
-        self.render_text_centered(f'Du valde att {self.player_choice}', self.result_font, 100, WHITE)
-        self.render_text_centered(f'Andra fången valde att {self.opponent_choice}', self.result_font, 150, WHITE)
-        self.render_text_centered(f'Resultat: ', self.result_font, 250, WHITE)
-        self.render_text_centered(f'Du fick {self.result[0]} år i fängelse.', self.body_font, 300, WHITE)
-        self.render_text_centered(f'Andra fången fick {self.result[1]} år i fängelse.', self.body_font, 330, WHITE)
+        self.render_text(f'Du valde att {self.player_choice}', self.result_font, 100, WHITE)
+        self.render_text(f'Andra fången valde att {self.opponent_choice}', self.result_font, 150, WHITE)
+        self.render_text(f'Resultat: ', self.result_font, 250, WHITE)
+        self.render_text(f'Du fick {self.result[0]} år i fängelse.', self.body_font, 300, WHITE)
+        self.render_text(f'Andra fången fick {self.result[1]} år i fängelse.', self.body_font, 330, WHITE)
+        self.render_text(f'Tryck på \'R\' för att starta om.', self.body_font, 540, WHITE)
+    
+    def restart_game(self):
+        self.player_choice = None
+        self.opponent_choice = None
+        self.result = None
 
     def run(self):
         running = True
@@ -222,7 +229,11 @@ class Game():
                     if cooperate_rect.collidepoint(mouse_pos):
                         self.player_choice = "tiga"
                     elif defect_rect.collidepoint(mouse_pos):
-                        self.player_choice = "vittna"
+                        self.player_choice = "vittna" 
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_r:
+                        self.restart_game()
+            
 
             clock.tick(FPS)
 

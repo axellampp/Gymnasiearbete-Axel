@@ -75,10 +75,6 @@ def strat_friedman(opponentMoveHistory=None, selfMoveHistory=None):
 # Initialize Friedman-specific variables
 strat_friedman.hasDefected = False
 
-# Small function that will ensure that friedman will work for every match
-def reset_friedman():
-    strat_friedman.hasDefected = False
-
 def strat_davis(opponentMoveHistory=None, selfMoveHistory=None):
     if len(opponentMoveHistory) < 10:
         return "Cooperate"
@@ -130,32 +126,6 @@ def strat_memoryDecay(opponentMoveHistory=None, selfMoveHistory=None):
             return "Cooperate"
 
 # Defect first two moves. After the first two moves, alternate based on a probability that increases with opponent's cooperation
-def strat_old_tideman_chieruzzi(opponentMoveHistory=None, selfMoveHistory=None):
-    # Keep track of opponent's cooperation
-    if opponentMoveHistory is None:
-        opponentMoveHistory = []
-
-    num_cooperates = opponentMoveHistory.count("Cooperate")
-    num_moves = len(opponentMoveHistory)
-
-    # After the first two moves, alternate based on a probability that increases with opponent's cooperation
-    if num_moves <= 1:
-        return "Defect"
-    
-    # Calculate cooperation probability (e.g., 0.7 = 7% chance of cooperating)
-    if num_moves > 1:
-        coop_probability = num_cooperates / num_moves  # Opponent's cooperation rate
-        # Add a base probability to ensure a minimum chance of cooperating
-        #print(f" chance to coop: {coop_probability}")
-        base_probability = 0.3
-        final_probability = base_probability + coop_probability * 0.7
-
-        # Make decision based on calculated probability
-        if random.random() < final_probability:
-            return "Cooperate"
-        else:
-            return "Defect"
-
 def strat_tideman_chieruzzi(opponentMoveHistory, selfMoveHistory=None):
     round_num = len(opponentMoveHistory)
     num_rounds = 200
@@ -195,7 +165,7 @@ def strat_tideman_chieruzzi(opponentMoveHistory, selfMoveHistory=None):
         # Fresh start criteria based on chi-squared test
         if chi2_stat >= 9:  # Approx. 3.0 standard deviations from random
             strat_tideman_chieruzzi.last_fresh_start = round_num
-            return "Cooperate"  # Start fresh with two cooperations
+            return "Cooperate"  # Start with two cooperations
 
 
     # Defect on the last two moves
@@ -346,6 +316,18 @@ def strat_human(opponentMoveHistory=None, selfMoveHistory=None):
         else:
             print(f"'{choice}' is invalid, try again.")
 
+# Small function that will ensure strategies with special variables works every simulation.
+def reset_strategies():
+    strat_friedman.hasDefected = False
+
+    strat_tideman_chieruzzi.retaliation_count = 0
+    strat_tideman_chieruzzi.consecutive_opponent_defections = 0
+    strat_tideman_chieruzzi.last_fresh_start = -2
+    
+    strat_graaskamp.random_opponent_detected = False
+    strat_graaskamp.tit_for_tat_detected = False
+    strat_graaskamp.defect_counter = 0
+
 # Define strategies in an array
 strategies = [
     strat_cooperator,
@@ -360,7 +342,7 @@ strategies = [
     strat_graaskamp,
     strat_feld,
     strat_tullock,
-    strat_davis
+    strat_davis,
 ]
 
 strategy_names = [
@@ -381,7 +363,7 @@ strategy_names = [
 
 # simulate_match() simulates a match between 2 strategies
 def simulate_match(A_strategy, B_strategy, num_rounds):
-    reset_friedman()
+    reset_strategies()
 
     A_score = 0
     B_score = 0
