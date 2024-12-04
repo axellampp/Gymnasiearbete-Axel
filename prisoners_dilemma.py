@@ -56,7 +56,7 @@ def strat_joss(opponentMoveHistory=None, selfMoveHistory=None):
 
     # Introduce a small chance of doing the opposite of the opponent’s last move
     if random.random() < 0.1:
-        return "Defect" if opponentMoveHistory[-1] == "Cooperate" else "Cooperate"
+        return "Defect" if opponentMoveHistory[-1] == "Cooperate" else "Defect"
     
     # Otherwise, copy the opponent's last move
     return opponentMoveHistory[-1]
@@ -85,7 +85,7 @@ def strat_davis(opponentMoveHistory=None, selfMoveHistory=None):
     return "Cooperate"
 
 # Tit for tat the first 15 rounds. Calculate a net cooperation score where Cooperation: 1 and Defection: -2. If the net cooperation score (NCS) < 0, defect.
-# Also have a chance to alter the memory of the opponent's past moves and a change to delete the memory
+# Also have a chance to alter the memory of the opponent's past moves and a chance to delete the memory
 def strat_memoryDecay(opponentMoveHistory=None, selfMoveHistory=None):
     if opponentMoveHistory is None:
         opponentMoveHistory = []
@@ -125,7 +125,7 @@ def strat_memoryDecay(opponentMoveHistory=None, selfMoveHistory=None):
         else:
             return "Cooperate"
 
-# Defect first two moves. After the first two moves, alternate based on a probability that increases with opponent's cooperation
+# Cooperate first two moves. After the first two moves, alternate based on a probability that increases with opponent's cooperation
 def strat_tideman_chieruzzi(opponentMoveHistory, selfMoveHistory=None):
     round_num = len(opponentMoveHistory)
     num_rounds = 200
@@ -271,7 +271,7 @@ def strat_feld(opponentMoveHistory=None, selfMoveHistory=None):
         return "Defect"
 
     # Calculation of cooperation probability
-    prob_cooperate = max(1 - (round_num / 400), 0.5)
+    prob_cooperate = max(1 - (round_num / 200), 0.5)
 
     # Randomly choose to cooperate based on the calculated probability
     if random.random() < prob_cooperate:
@@ -367,7 +367,6 @@ def simulate_match(A_strategy, B_strategy, num_rounds):
 
     A_score = 0
     B_score = 0
-
     A_move_history = []
     B_move_history = []
 
